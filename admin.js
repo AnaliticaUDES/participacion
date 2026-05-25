@@ -251,7 +251,7 @@ function eliminarTarjeta(id) {
 
   fetch(CONFIG.GAS_URL, {
     method: "POST",
-    headers: { "Content-Type": "application/json" },
+    headers: { "Content-Type": "text/plain" },
     body: JSON.stringify({ action: "deleteCard", id: id, password: ADMIN_PASS_LOCAL })
   })
     .then(function (res) { return res.json(); })
@@ -274,7 +274,7 @@ function moverTarjeta(id) {
 
   fetch(CONFIG.GAS_URL, {
     method: "POST",
-    headers: { "Content-Type": "application/json" },
+    headers: { "Content-Type": "text/plain" },
     body: JSON.stringify({ action: "moveCard", id: id, nuevaCategoria: nuevaCategoria, password: ADMIN_PASS_LOCAL })
   })
     .then(function (res) { return res.json(); })
