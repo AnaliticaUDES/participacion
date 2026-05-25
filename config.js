@@ -2,7 +2,7 @@
 // IMPORTANTE: Reemplazar GAS_URL con la URL real después de desplegar el Web App en Google Apps Script
 
 const CONFIG = {
-  GAS_URL: "https://script.google.com/macros/s/AKfycbzAxvSvaLLJelhnjLB28ZfvnIV1iKb73DgzhNMZdzIEbhBD5zFc7ewKezCM-QJGyRqZgw/exec",
+  GAS_URL: "https://script.google.com/macros/s/AKfycbwSNS288JhcMUqRnRilLD2cJW8QTUCsWNGrFS_w5OsFMTpg2Z16HoqTbT8fugzcRHXy9g/exec",
 
   CAMPUS: ["Bucaramanga", "Valledupar", "Cúcuta", "Bogotá", "Arauca"],
 
