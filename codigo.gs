@@ -49,6 +49,10 @@ function doPost(e) {
     response = saveCard(data);
   } else if (action === "vote") {
     response = addVote(data.id);
+  } else if (action === "deleteCard") {
+    response = deleteCard(data);
+  } else if (action === "moveCard") {
+    response = moveCard(data);
   } else {
     response = { error: "Acción no reconocida" };
   }
@@ -147,6 +151,69 @@ function getCards() {
   });
 
   return { cards: cards };
+}
+
+// ── deleteCard ────────────────────────────────────────────────────────────────
+
+function deleteCard(data) {
+  if (!data.password || data.password !== ADMIN_PASSWORD) {
+    return { error: "No autorizado" };
+  }
+  if (!data.id) {
+    return { error: "Se requiere el id de la tarjeta" };
+  }
+
+  var sheet   = getSheet();
+  var lastRow = sheet.getLastRow();
+
+  if (lastRow <= 1) {
+    return { error: "Tarjeta no encontrada" };
+  }
+
+  var idColumn = sheet.getRange(2, 1, lastRow - 1, 1).getValues();
+
+  for (var i = 0; i < idColumn.length; i++) {
+    if (idColumn[i][0] === data.id) {
+      sheet.deleteRow(i + 2);
+      return { success: true };
+    }
+  }
+
+  return { error: "Tarjeta no encontrada" };
+}
+
+// ── moveCard ──────────────────────────────────────────────────────────────────
+
+function moveCard(data) {
+  if (!data.password || data.password !== ADMIN_PASSWORD) {
+    return { error: "No autorizado" };
+  }
+  if (!data.id) {
+    return { error: "Se requiere el id de la tarjeta" };
+  }
+
+  var categoriasValidas = ["retos", "vision", "oportunidades", "fortalezas"];
+  if (!data.nuevaCategoria || categoriasValidas.indexOf(data.nuevaCategoria) === -1) {
+    return { error: "Categoría inválida" };
+  }
+
+  var sheet   = getSheet();
+  var lastRow = sheet.getLastRow();
+
+  if (lastRow <= 1) {
+    return { error: "Tarjeta no encontrada" };
+  }
+
+  var idColumn = sheet.getRange(2, 1, lastRow - 1, 1).getValues();
+
+  for (var i = 0; i < idColumn.length; i++) {
+    if (idColumn[i][0] === data.id) {
+      sheet.getRange(i + 2, 6).setValue(data.nuevaCategoria);
+      return { success: true, nuevaCategoria: data.nuevaCategoria };
+    }
+  }
+
+  return { error: "Tarjeta no encontrada" };
 }
 
 // ── addVote ───────────────────────────────────────────────────────────────────
