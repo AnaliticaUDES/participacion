@@ -1,0 +1,133 @@
+/* style.css — Estilos UDES Diagnóstico 2030 */
+
+:root {
+  --udes-azul: #1a237e;
+  --udes-rojo: #c62828;
+}
+
+/* Colores institucionales */
+.bg-udes-azul   { background-color: #1a237e; }
+.text-udes-azul { color: #1a237e; }
+.bg-udes-rojo   { background-color: #c62828; }
+.text-udes-rojo { color: #c62828; }
+.border-udes-azul { border-color: #1a237e; }
+.focus\:ring-udes-azul:focus { --tw-ring-color: #1a237e; }
+
+/* Tarjeta */
+.card-item {
+  background: white;
+  border-radius: 0.75rem;
+  padding: 0.875rem;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.10);
+  margin-bottom: 0.75rem;
+  border-left: 4px solid transparent;
+  animation: cardEnter 0.25s ease-out;
+  transition: box-shadow 0.15s, transform 0.15s;
+}
+
+.card-item:hover {
+  box-shadow: 0 4px 12px rgba(0,0,0,0.12);
+  transform: translateY(-1px);
+}
+
+.card-retos         { border-left-color: #ef4444; }
+.card-vision        { border-left-color: #22c55e; }
+.card-oportunidades { border-left-color: #eab308; }
+.card-fortalezas    { border-left-color: #3b82f6; }
+
+@keyframes cardEnter {
+  from { opacity: 0; transform: translateY(8px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* Columnas del tablero */
+.board-column {
+  width: 300px;
+  min-width: 300px;
+  background: #f8fafc;
+  border-radius: 1rem;
+  padding: 1rem;
+  border: 1px solid #e2e8f0;
+  display: flex;
+  flex-direction: column;
+}
+
+.cards-container {
+  flex: 1;
+  overflow-y: auto;
+  max-height: calc(100vh - 220px);
+  padding-right: 2px;
+}
+
+.cards-container::-webkit-scrollbar { width: 4px; }
+.cards-container::-webkit-scrollbar-track { background: transparent; }
+.cards-container::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 2px; }
+
+/* Botón agregar tarjeta */
+.btn-add-card {
+  border: 2px dashed #cbd5e1;
+  color: #9ca3af;
+  border-radius: 0.75rem;
+  padding: 0.5rem;
+  width: 100%;
+  font-size: 0.875rem;
+  font-weight: 500;
+  cursor: pointer;
+  background: transparent;
+  margin-bottom: 0.75rem;
+  transition: all 0.15s;
+}
+
+.btn-add-card:hover {
+  border-color: #1a237e;
+  color: #1a237e;
+  background: #eef2ff;
+}
+
+/* Botón de voto */
+.btn-vote {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 0.75rem;
+  color: #6b7280;
+  border: 1px solid #e5e7eb;
+  border-radius: 999px;
+  padding: 2px 10px;
+  cursor: pointer;
+  background: transparent;
+  transition: all 0.15s;
+}
+
+.btn-vote:hover:not([disabled]) {
+  background: #eff6ff;
+  border-color: #93c5fd;
+  color: #1d4ed8;
+}
+
+.btn-vote.voted {
+  background: #eff6ff;
+  border-color: #3b82f6;
+  color: #1d4ed8;
+  font-weight: 600;
+  cursor: default;
+}
+
+/* Spinner de carga */
+.spinner {
+  display: inline-block;
+  width: 16px;
+  height: 16px;
+  border: 2px solid rgba(255,255,255,0.35);
+  border-top-color: white;
+  border-radius: 50%;
+  animation: spin 0.7s linear infinite;
+  vertical-align: middle;
+}
+
+@keyframes spin { to { transform: rotate(360deg); } }
+
+/* Responsive */
+@media (max-width: 640px) {
+  .board-column { width: 280px; min-width: 280px; }
+}
