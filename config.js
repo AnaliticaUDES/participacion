@@ -39,7 +39,7 @@ const CONFIG = {
     },
     {
       id: "p2",
-      texto: "¿Cómo deberían responder las instituciones de educación superior frente a los cambios tecnológicos y sociales?",
+      texto: "¿Cómo debería responder la UDES frente a los cambios tecnológicos y sociales?",
       opciones: [
         "Innovando en programas académicos",
         "Impulsando el Bilingüismo",
