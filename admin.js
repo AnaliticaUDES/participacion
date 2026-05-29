@@ -99,8 +99,19 @@ function mostrarPanelAdmin() {
   });
 
   cargarDatosAdmin();
+  cargarResultados("admin-resultados-charts", "admin-resultados-total");
 
-  document.getElementById("btn-admin-refresh").addEventListener("click", cargarDatosAdmin);
+  // Refresco en vivo de tarjetas y resultados del cuestionario
+  if (STATE.pollResultados) clearInterval(STATE.pollResultados);
+  STATE.pollResultados = setInterval(function () {
+    cargarDatosAdmin();
+    cargarResultados("admin-resultados-charts", "admin-resultados-total");
+  }, CONFIG.POLL_INTERVAL);
+
+  document.getElementById("btn-admin-refresh").addEventListener("click", function () {
+    cargarDatosAdmin();
+    cargarResultados("admin-resultados-charts", "admin-resultados-total");
+  });
 }
 
 function cargarDatosAdmin() {
@@ -239,6 +250,7 @@ function renderizarTablaAdmin(tarjetas) {
 
 function configurarBotonSalir() {
   document.getElementById("btn-admin-exit").addEventListener("click", function () {
+    if (STATE.pollResultados) { clearInterval(STATE.pollResultados); STATE.pollResultados = null; }
     document.getElementById("screen-admin").classList.add("hidden");
     document.getElementById("screen-config").classList.remove("hidden");
   });

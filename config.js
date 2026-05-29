@@ -18,5 +18,49 @@ const CONFIG = {
   // Intervalo de recarga automática en milisegundos (30 segundos)
   POLL_INTERVAL: 30000,
 
-  MAX_CHARS: 500
+  MAX_CHARS: 500,
+
+  // Cuestionario previo al tablero. Cada pregunta es de selección múltiple
+  // (se puede marcar varias) y con opción "Otra" abierta. Los id (p1, p2, p3)
+  // deben coincidir con PREGUNTAS_IDS en codigo.gs.
+  PREGUNTAS: [
+    {
+      id: "p1",
+      texto: "¿Qué aspecto considera prioritario fortalecer en los jóvenes santandereanos?",
+      opciones: [
+        "Disciplina y liderazgo",
+        "Bilingüismo",
+        "Creatividad e innovación",
+        "Competencias digitales",
+        "Formación deportiva",
+        "Trabajo colaborativo"
+      ],
+      permiteOtra: true
+    },
+    {
+      id: "p2",
+      texto: "¿Cómo deberían responder las instituciones de educación superior frente a los cambios tecnológicos y sociales?",
+      opciones: [
+        "Innovando en programas académicos",
+        "Impulsando el Bilingüismo",
+        "Integrando Inteligencia Artificial",
+        "Fortaleciendo investigación",
+        "Trabajando más con empresas",
+        "Formando en habilidades humanas"
+      ],
+      permiteOtra: true
+    },
+    {
+      id: "p3",
+      texto: "¿Cuál debería ser la prioridad educativa del departamento hacia 2050?",
+      opciones: [
+        "Cobertura educativa",
+        "Calidad académica",
+        "Formación tecnológica",
+        "Investigación e innovación",
+        "Internacionalización"
+      ],
+      permiteOtra: true
+    }
+  ]
 };

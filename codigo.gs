@@ -13,7 +13,14 @@
 // 7. Copiar la URL del endpoint y pegarla en config.js (campo GAS_URL)
 
 var SHEET_NAME    = "Tarjetas";
+var ENCUESTA_SHEET = "Encuesta";
 var ADMIN_PASSWORD = "UDES2030admin"; // ← CAMBIAR ANTES DE DESPLEGAR
+
+// IDs de las preguntas del cuestionario. Deben coincidir con CONFIG.PREGUNTAS en config.js.
+var PREGUNTAS_IDS = ["p1", "p2", "p3"];
+
+var CAMPUS_VALIDOS = ["Bucaramanga", "Valledupar", "Cúcuta", "Bogotá", "Arauca"];
+var ROLES_VALIDOS  = ["Directivo", "Docente", "Estudiante", "Administrativo"];
 
 // ── Endpoints HTTP ────────────────────────────────────────────────────────────
 
@@ -23,6 +30,8 @@ function doGet(e) {
 
   if (action === "getCards") {
     response = getCards();
+  } else if (action === "getEncuesta") {
+    response = getEncuesta();
   } else {
     response = { error: "Acción no reconocida" };
   }
@@ -53,6 +62,8 @@ function doPost(e) {
     response = deleteCard(data);
   } else if (action === "moveCard") {
     response = moveCard(data);
+  } else if (action === "saveEncuesta") {
+    response = saveEncuesta(data);
   } else {
     response = { error: "Acción no reconocida" };
   }
@@ -243,4 +254,93 @@ function addVote(cardId) {
   }
 
   return { error: "Tarjeta no encontrada" };
+}
+
+// ── Cuestionario ──────────────────────────────────────────────────────────────
+
+function getEncuestaSheet() {
+  var ss    = SpreadsheetApp.getActiveSpreadsheet();
+  var sheet = ss.getSheetByName(ENCUESTA_SHEET);
+
+  if (!sheet) {
+    sheet = ss.insertSheet(ENCUESTA_SHEET);
+    var encabezados = ["id", "timestamp", "campus", "rol", "nombre"].concat(PREGUNTAS_IDS);
+    sheet.appendRow(encabezados);
+
+    var headerRange = sheet.getRange(1, 1, 1, encabezados.length);
+    headerRange.setFontWeight("bold");
+    headerRange.setBackground("#1a237e");
+    headerRange.setFontColor("#ffffff");
+    sheet.setFrozenRows(1);
+  }
+
+  return sheet;
+}
+
+function saveEncuesta(data) {
+  if (!data.campus || CAMPUS_VALIDOS.indexOf(data.campus) === -1) {
+    return { error: "Campus inválido" };
+  }
+  if (!data.rol || ROLES_VALIDOS.indexOf(data.rol) === -1) {
+    return { error: "Rol inválido" };
+  }
+  if (!data.respuestas || typeof data.respuestas !== "object") {
+    return { error: "Respuestas inválidas" };
+  }
+
+  // Cada pregunta debe tener al menos una opción marcada
+  for (var k = 0; k < PREGUNTAS_IDS.length; k++) {
+    var sel = data.respuestas[PREGUNTAS_IDS[k]];
+    if (!sel || !sel.length) {
+      return { error: "Falta responder la pregunta " + PREGUNTAS_IDS[k] };
+    }
+  }
+
+  var sheet     = getEncuestaSheet();
+  var id        = Utilities.getUuid();
+  var timestamp = new Date().toISOString();
+  var nombre    = (data.nombre && data.nombre.trim() !== "") ? data.nombre.trim() : "Anónimo";
+
+  var fila = [id, timestamp, data.campus, data.rol, nombre];
+  PREGUNTAS_IDS.forEach(function (pid) {
+    var sel = data.respuestas[pid] || [];
+    fila.push(sel.join("; "));
+  });
+
+  sheet.appendRow(fila);
+
+  return { success: true, id: id, timestamp: timestamp };
+}
+
+function getEncuesta() {
+  var sheet   = getEncuestaSheet();
+  var lastRow = sheet.getLastRow();
+  var nCols   = 5 + PREGUNTAS_IDS.length;
+
+  if (lastRow <= 1) {
+    return { respuestas: [] };
+  }
+
+  var values = sheet.getRange(2, 1, lastRow - 1, nCols).getValues();
+
+  var respuestas = values
+    .filter(function (row) { return row[0] !== ""; })
+    .map(function (row) {
+      var obj = {
+        id:        row[0],
+        timestamp: row[1] instanceof Date ? row[1].toISOString() : String(row[1]),
+        campus:    row[2],
+        rol:       row[3],
+        nombre:    row[4]
+      };
+      PREGUNTAS_IDS.forEach(function (pid, idx) {
+        var celda = row[5 + idx];
+        obj[pid] = (celda === "" || celda == null)
+          ? []
+          : String(celda).split("; ").filter(function (s) { return s !== ""; });
+      });
+      return obj;
+    });
+
+  return { respuestas: respuestas };
 }

@@ -127,6 +127,55 @@
 
 @keyframes spin { to { transform: rotate(360deg); } }
 
+/* Cuestionario */
+.encuesta-opciones {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.encuesta-opcion {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 12px;
+  border: 1px solid #e5e7eb;
+  border-radius: 0.6rem;
+  cursor: pointer;
+  font-size: 0.9rem;
+  color: #374151;
+  transition: background 0.15s, border-color 0.15s;
+}
+
+.encuesta-opcion:hover {
+  background: #eef2ff;
+  border-color: #c7d2fe;
+}
+
+.encuesta-opcion input {
+  width: 18px;
+  height: 18px;
+  accent-color: #1a237e;
+  cursor: pointer;
+  flex-shrink: 0;
+}
+
+.input-otra {
+  width: 100%;
+  margin-top: 8px;
+  border: 1px solid #d1d5db;
+  border-radius: 0.6rem;
+  padding: 8px 12px;
+  font-size: 0.9rem;
+  color: #374151;
+}
+
+.input-otra:focus {
+  outline: none;
+  border-color: #1a237e;
+  box-shadow: 0 0 0 2px rgba(26,35,126,0.15);
+}
+
 /* Responsive */
 @media (max-width: 640px) {
   .board-column { width: 280px; min-width: 280px; }
